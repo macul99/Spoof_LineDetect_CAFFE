@@ -1,0 +1,100 @@
+name: "spoofing_ld_classify_net"
+input: "clf_data"
+input_dim: 1
+input_dim: 80
+input_dim: 1
+input_dim: 1
+layer {
+  name: "clf_fc1"
+  type: "InnerProduct"
+  bottom: "clf_data"
+  top: "clf_fc1"
+
+  inner_product_param {
+    num_output: 128
+
+  }
+}
+layer {
+  name: "clf_drop1"
+  type: "Dropout"
+  bottom: "clf_fc1"
+  top: "clf_fc1"
+  include {
+    phase: TRAIN
+  }
+  dropout_param {
+    dropout_ratio: 0.2
+  }
+}
+layer {
+  name: "clf_prelu1"
+  type: "PReLU"
+  bottom: "clf_fc1"
+  top: "clf_fc1"
+}
+layer {
+  name: "clf_fc2"
+  type: "InnerProduct"
+  bottom: "clf_fc1"
+  top: "clf_fc2"
+
+  inner_product_param {
+    num_output: 64
+
+  }
+}
+layer {
+  name: "clf_drop2"
+  type: "Dropout"
+  bottom: "clf_fc2"
+  top: "clf_fc2"
+  include {
+    phase: TRAIN
+  }
+  dropout_param {
+    dropout_ratio: 0.2
+  }
+}
+layer {
+  name: "clf_prelu2"
+  type: "PReLU"
+  bottom: "clf_fc2"
+  top: "clf_fc2"
+}
+layer {
+  name: "clf_fc5"
+  type: "InnerProduct"
+  bottom: "clf_fc2"
+  top: "clf_fc5"
+
+  inner_product_param {
+    num_output: 32
+
+  }
+}
+layer {
+  name: "clf_prelu5"
+  type: "PReLU"
+  bottom: "clf_fc5"
+  top: "clf_fc5"
+}
+layer {
+  name: "clf_class"
+  type: "InnerProduct"
+  bottom: "clf_fc5"
+  top: "clf_class"
+
+  inner_product_param {
+    num_output: 2
+
+  }
+}
+
+layer {
+  name: "clf_prob"
+  type: "Softmax"
+  bottom: "clf_class"
+  top: "clf_prob"
+}
+
